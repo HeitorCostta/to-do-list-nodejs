@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="fw-bold"><%= lista.nome %></h1>
+    <a href="/listas/<%= lista.id %>/tarefas/nova" class="btn btn-primary">
+      + Adicionar Tarefa
+    </a>
+  </div>
+
+  <h3 class="mb-3">Tarefas</h3>
+
+  <% if (lista.tarefas.length === 0) { %>
+
+  <div class="alert alert-info">Nenhuma tarefa encontrada.</div>
+
+  <% } else { %>
+
+  <ul class="list-group">
+    <% lista.tarefas.forEach(t => { %>
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div>
+        <% if (t.concluida) { %>
+        <span class="text-decoration-line-through text-muted"
+          ><%= t.nome %></span
+        >
+        <% } else { %>
+        <span><%= t.nome %></span>
+        <% } %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <% if (!t.concluida) { %>
+        <form
+          action="/listas/<%= lista.id %>/tarefas/<%= t.id %>/concluir"
+          method="POST"
+        >
+          <button type="submit" class="btn btn-success btn-sm">Concluir</button>
+        </form>
+        <% } %>
+
+        <form
+          action="/listas/<%= lista.id %>/tarefas/<%= t.id %>/excluir"
+          method="POST"
+        >
+          <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+        </form>
+      </div>
+    </li>
+    <% }) %>
+  </ul>
+
+  <% } %>
+
+  <a href="/listas" class="btn btn-outline-secondary mt-4">Voltar</a>
+</div>

@@ -1,0 +1,29 @@
+<div class="text-center mb-4">
+  <h1 class="fw-bold">Gerenciador de Listas</h1>
+  <p class="lead">Organize suas listas e tarefas de forma simples e rápida.</p>
+
+  <a href="/listas" class="btn btn-primary btn-lg mt-3"> Ver Minhas Listas </a>
+</div>
+
+<hr />
+
+<h2 class="fw-semibold mb-3">Resumo das Listas</h2>
+
+<% if (listas && listas.length) { %>
+
+<ul class="list-group">
+  <% listas.forEach(l => { %>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    <a class="fw-semibold text-decoration-none" href="/listas/<%= l.id %>">
+      <%= l.nome %>
+    </a>
+    <span class="badge bg-secondary"> <%= l.tarefas.length %> tarefas </span>
+  </li>
+  <% }) %>
+</ul>
+
+<% } else { %>
+<div class="alert alert-info">
+  Nenhuma lista criada ainda. Que tal criar sua primeira?
+</div>
+<% } %>

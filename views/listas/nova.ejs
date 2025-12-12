@@ -1,0 +1,14 @@
+<div class="container mt-4">
+  <h1 class="fw-bold mb-4">Criar Nova Lista</h1>
+
+  <form action="/listas" method="POST" class="card p-4 shadow-sm">
+    <div class="mb-3">
+      <label for="nome" class="form-label">Nome da lista</label>
+      <input type="text" id="nome" name="nome" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Criar lista</button>
+  </form>
+
+  <a href="/listas" class="btn btn-link mt-3">Voltar</a>
+</div>
