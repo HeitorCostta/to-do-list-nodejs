@@ -1,17 +1,27 @@
 {
-  "dependencies": {
-    "ejs": "^3.1.10",
-    "express": "^5.1.0",
-    "express-ejs-layouts": "^2.5.1"
-  },
   "name": "exer-to-do",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "To-Do List application built with Node.js, Express, EJS and Bootstrap",
+  "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "nodejs",
+    "express",
+    "ejs",
+    "mvc",
+    "todo"
+  ],
+  "author": "Heitor Costa",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
 }
