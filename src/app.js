@@ -1,3 +1,6 @@
+require("dotenv").config();
+const connectDB = require("./config/database");
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -17,6 +20,9 @@ app.use(expressLayouts);
 app.set("layout", "partials/layout");
 // Rotas
 app.use("/", router);
+
+// Conecta ao banco de dados
+connectDB();
 
 // Servidor
 app.listen(PORT, () => {

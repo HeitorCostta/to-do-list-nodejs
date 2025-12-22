@@ -1,123 +1,131 @@
-// controllers/listasController.js
-
-// Simples armazenamento em memória (para aprender; depois troca por DB)
-let listas = [
-  {
-    id: 1,
-    nome: "Compras",
-    tarefas: [
-      { id: 1, nome: "Leite", concluida: false },
-      { id: 2, nome: "Pão", concluida: true },
-    ],
-  },
-  {
-    id: 2,
-    nome: "Estudos",
-    tarefas: [{ id: 1, nome: "Revisar Node", concluida: false }],
-  },
-];
+const Lista = require("../models/Lista");
 
 module.exports = {
-  home: (req, res) => {
-    // Renderiza a home (views/home.ejs)
+  // HOME
+  home: async (req, res) => {
+    const listas = await Lista.find();
     res.render("home", { title: "Home", listas });
   },
 
-  listarListas: (req, res) => {
-    // Renderiza a página que mostra todas as listas
+  // LISTAR LISTAS
+  listarListas: async (req, res) => {
+    const listas = await Lista.find();
     res.render("listas/index", { title: "Todas as Listas", listas });
   },
 
+  // FORM NOVA LISTA
   formNovaLista: (req, res) => {
-    // Renderiza formulário para criar nova lista
     res.render("listas/nova", { title: "Criar Nova Lista" });
   },
 
-  criarLista: (req, res) => {
-    // Recebe dados do formulário via req.body
+  // CRIAR LISTA
+  criarLista: async (req, res) => {
     const nome = req.body.nome;
+
     if (!nome || !nome.trim()) {
       return res.redirect("/listas/nova");
     }
-    const nova = {
-      id: Date.now(), // id simples (não usado em produção)
+
+    await Lista.create({
       nome: nome.trim(),
       tarefas: [],
-    };
-    listas.push(nova);
+    });
+
     res.redirect("/listas");
   },
 
-  exibirLista: (req, res) => {
-    const id = Number(req.params.id);
-    const lista = listas.find((l) => l.id === id);
+  // EXIBIR UMA LISTA
+  exibirLista: async (req, res) => {
+    const lista = await Lista.findById(req.params.id);
+
     if (!lista) {
       return res.status(404).send("Lista não encontrada");
     }
-    res.render("listas/detalhes", { title: lista.nome, lista });
+
+    res.render("listas/detalhes", {
+      title: lista.nome,
+      lista,
+    });
   },
 
-  formNovaTarefa: (req, res) => {
-    const id = Number(req.params.id);
-    const lista = listas.find((l) => l.id === id);
-    if (!lista) return res.status(404).send("Lista não encontrada");
-    res.render("tarefas/nova", { title: `Nova tarefa - ${lista.nome}`, lista });
-  },
+  // FORM NOVA TAREFA
+  formNovaTarefa: async (req, res) => {
+    const lista = await Lista.findById(req.params.id);
 
-  criarTarefa: (req, res) => {
-    const id = Number(req.params.id);
-    const lista = listas.find((l) => l.id === id);
-    if (!lista) return res.status(404).send("Lista não encontrada");
-
-    const nome = req.body.nome;
-    if (!nome || !nome.trim()) {
-      return res.redirect(`/listas/${id}/tarefas/nova`);
-    }
-    const novaTarefa = {
-      id: Date.now(),
-      nome: nome.trim(),
-      concluida: false,
-    };
-    lista.tarefas.push(novaTarefa);
-    res.redirect(`/listas/${id}`);
-  },
-
-  concluirTarefa: (req, res) => {
-    const id = Number(req.params.id);
-    const tarefaId = Number(req.params.tarefaId);
-    const lista = listas.find((l) => l.id === id);
-    if (!lista) return res.status(404).send("Lista não encontrada");
-
-    const tarefa = lista.tarefas.find((t) => t.id === tarefaId);
-    if (!tarefa) return res.status(404).send("Tarefa não encontrada");
-
-    tarefa.concluida = true;
-    res.redirect(`/listas/${id}`);
-  },
-
-  excluirTarefa: (req, res) => {
-    const id = Number(req.params.id);
-    const tarefaId = Number(req.params.tarefaId);
-    const lista = listas.find((l) => l.id === id);
-    if (!lista) return res.status(404).send("Lista não encontrada");
-
-    lista.tarefas = lista.tarefas.filter((t) => t.id !== tarefaId);
-    res.redirect(`/listas/${id}`);
-  },
-
-  excluirLista: (req, res) => {
-    const id = Number(req.params.id);
-
-    // Verifica se existe
-    const existe = listas.some((l) => l.id === id);
-    if (!existe) {
+    if (!lista) {
       return res.status(404).send("Lista não encontrada");
     }
 
-    // Remove
-    listas = listas.filter((l) => l.id !== id);
+    res.render("tarefas/nova", {
+      title: `Nova tarefa - ${lista.nome}`,
+      lista,
+    });
+  },
 
-    // Redireciona pra página principal de listas
+  // CRIAR TAREFA
+  criarTarefa: async (req, res) => {
+    const lista = await Lista.findById(req.params.id);
+
+    if (!lista) {
+      return res.status(404).send("Lista não encontrada");
+    }
+
+    const nome = req.body.nome;
+
+    if (!nome || !nome.trim()) {
+      return res.redirect(`/listas/${lista._id}/tarefas/nova`);
+    }
+
+    lista.tarefas.push({
+      nome: nome.trim(),
+      concluida: false,
+    });
+
+    await lista.save();
+
+    res.redirect(`/listas/${lista._id}`);
+  },
+
+  // CONCLUIR TAREFA
+  concluirTarefa: async (req, res) => {
+    const lista = await Lista.findById(req.params.id);
+
+    if (!lista) {
+      return res.status(404).send("Lista não encontrada");
+    }
+
+    const tarefa = lista.tarefas.id(req.params.tarefaId);
+
+    if (!tarefa) {
+      return res.status(404).send("Tarefa não encontrada");
+    }
+
+    tarefa.concluida = true;
+    await lista.save();
+
+    res.redirect(`/listas/${lista._id}`);
+  },
+
+  // EXCLUIR TAREFA
+  excluirTarefa: async (req, res) => {
+    const lista = await Lista.findById(req.params.id);
+
+    if (!lista) {
+      return res.status(404).send("Lista não encontrada");
+    }
+
+    lista.tarefas = lista.tarefas.filter(
+      (t) => t._id.toString() !== req.params.tarefaId
+    );
+
+    await lista.save();
+
+    res.redirect(`/listas/${lista._id}`);
+  },
+
+  // EXCLUIR LISTA
+  excluirLista: async (req, res) => {
+    await Lista.findByIdAndDelete(req.params.id);
     res.redirect("/listas");
   },
 };

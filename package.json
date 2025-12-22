@@ -17,9 +17,11 @@
   "author": "Heitor Costa",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
-    "express-ejs-layouts": "^2.5.1"
+    "express-ejs-layouts": "^2.5.1",
+    "mongoose": "^9.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.3"
