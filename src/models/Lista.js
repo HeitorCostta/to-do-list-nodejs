@@ -5,15 +5,18 @@ const ListaSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  tarefas: [
-    {
-      titulo: String,
-      concluida: {
-        type: Boolean,
-        default: false,
-      },
+tarefas: [
+  {
+    nome: {
+      type: String,
+      required: true,
     },
-  ],
+    concluida: {
+      type: Boolean,
+      default: false,
+    },
+  },
+],
 });
 
 module.exports = mongoose.model("Lista", ListaSchema);

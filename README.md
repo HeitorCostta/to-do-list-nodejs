@@ -28,14 +28,20 @@ O projeto permite criar listas, adicionar tarefas, concluir e excluir tarefas, a
 - **JavaScript**
 - **HTML / CSS**
 - **Git & GitHub**
-
+- **MongoDB Atlas**
+- **Mongoose**
+- **dotenv** 
 ---
 
 ## 📂 Estrutura do Projeto
 
 src/
+├── config/
+│ └── database.js
 ├── controllers/
 │ └── listasController.js
+├── models/
+│ └── Lista.js
 ├── routes/
 │ └── router.js
 ├── views/
@@ -53,7 +59,18 @@ src/
 │ └── styles.css
 ├── app.js
 
-##🚀 Como Executar o Projeto
+## 🔐 Variáveis de Ambiente
+
+Este projeto utiliza variáveis de ambiente para conexão com o banco de dados.
+
+Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+
+MONGO_URI=sua_string_de_conexao_do_mongodb
+
+⚠️ O arquivo `.env` não é versionado por questões de segurança.
+
+
+## ▶️ Como Executar o Projeto
 
 1 - Clone o repositório:
 git clone https://github.com/HeitorCostta/to-do-list-nodejs.git
@@ -64,17 +81,24 @@ cd to-do-list-nodejs
 3 - Instale as dependências:
 npm install
 
-4 - Execute o projeto:
+4 - Configure o arquivo `.env` com sua conexão do MongoDB
+
+5 - Execute o projeto:
 npm start
 
-5 - Acesse no navegador:
+6 - Acesse no navegador:
 http://localhost:3000
+
 
 ##📌 Observações
 
-Os dados são armazenados em memória (sem banco de dados), com foco no aprendizado de backend e arquitetura MVC.
+## 📌 Observações
 
-O projeto pode ser facilmente evoluído para usar banco de dados como MongoDB ou PostgreSQL.
+- Os dados agora são persistidos utilizando MongoDB Atlas.
+- O projeto segue o padrão MVC.
+- As tarefas são armazenadas como subdocumentos dentro da lista.
+- Projeto com foco em aprendizado de backend e boas práticas.
+
 
 ## 👨‍💻 Autor
 
